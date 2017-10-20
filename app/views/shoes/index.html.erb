@@ -1,0 +1,26 @@
+<p class="d-inline">Hi <%=current_user.first_name%></p>
+<a class="float-right" href="/sessions" data-method="delete" style="margin-right:10px">Log Out</a>
+<a class="float-right" href="/dashboard/<%=session[:user_id]%>" style="margin-right:10px">Go to Dashboard</a>
+<p>All Products</p>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Product</th>
+			<th>Seller</th>
+			<th>Date Posted</th>
+			<th>Amount</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%@shoes.each do |shoe|%>
+		<tr>
+			<td><%=shoe.name%></td>
+			<td><%=shoe.seller.first_name%> <%=shoe.seller.last_name%></td>
+			<td><%=shoe.created_at.to_date%></td>
+			<td><%=number_to_currency(shoe.amount)%></td>
+			<td><a href="/shoes/<%=shoe.id%>">Buy</a></td>
+		</tr>
+		<%end%>
+	</tbody>
+</table>

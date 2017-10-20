@@ -1,0 +1,94 @@
+<p class="d-inline">Hi <%=current_user.first_name%></p>
+<a class="float-right" href="/sessions" data-method="delete" style="margin-right:10px">Log Out</a>
+<a class="float-right" href="/shoes" style="margin-right:10px">Go to All Products</a>
+<p>Sell Products</p>
+<% if flash[:errors] %>
+<ul>
+  <% flash[:errors].each do |e| %>
+    <li><%= e %></li>
+  <% end %>
+</ul>
+<% end %>
+<form action="/shoes" method="post" style="width:40%">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<div class="form-group">
+		<label>Name:</label>
+		<input type="text" name="name" class="form-control">
+	</div>
+	<div class="form-group">
+		<label>Amount:</label>
+		<div class="input-group">
+		  <span class="input-group-addon">$</span>
+		  <input type="number" class="form-control" name="amount" value=0.00 placeholder="price">
+		</div>
+	</div>
+	<input type="submit" class="btn btn-primary" value="Sell">
+</form>
+
+<p>Your products that are not yet sold:</p>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Product</th>
+			<th>Date Posted</th>
+			<th>Amount</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%@rest_shoes.each do |shoe|%>
+		<tr>
+			<td><%=shoe.name%></td>
+			<td><%=shoe.created_at.to_date%></td>
+			<td><%=number_to_currency(shoe.amount)%></td>
+			<td><a href="/shoes/<%=shoe.id%>" data-method="delete">Remove</a></td>
+		</tr>
+		<%end%>
+	</tbody>
+</table>
+
+<p>Sales:</p>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Product</th>
+			<th>Date Posted</th>
+			<th>Buyer</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%@sold_shoes.each do |shoe|%>
+		<tr>
+			<td><%=shoe.name%></td>
+			<td><%=shoe.created_at.to_date%></td>
+			<td><%=shoe.buyer.first_name%> <%=shoe.buyer.last_name%></td>
+			<td><%=number_to_currency(shoe.amount)%></td>
+		</tr>
+		<%end%>
+	</tbody>
+</table>
+<p class="text-right">Total: <%=number_to_currency(@income)%></p>
+
+<p>Purchases:</p>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Product</th>
+			<th>Date Posted</th>
+			<th>Seller</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%@buy_shoes.each do |shoe|%>
+		<tr>
+			<td><%=shoe.name%></td>
+			<td><%=shoe.created_at.to_date%></td>
+			<td><%=shoe.seller.first_name%> <%=shoe.seller.last_name%></td>
+			<td><%=number_to_currency(shoe.amount)%></td>
+		</tr>
+		<%end%>
+	</tbody>
+</table>
+<p class="text-right">Total: <%=number_to_currency(@purchase)%></p>
